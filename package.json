@@ -1,0 +1,10 @@
+{
+  "name": "frontend-angular",
+  "version": "1.0.0",
+  "description": "Library to display a pixeflut servers canvas on an HTML canvas",
+  "main": "index.js",
+  "repository": "https://git.oleb.it/ftsell/pixelflut-js.git",
+  "author": "ftsell",
+  "license": "MIT",
+  "private": false
+}
