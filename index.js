@@ -57,7 +57,7 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
             this.canvas_ctx.canvas.height = this.height;
         } else if (parts[0].toLowerCase() === "state") {
             if (parts[1].toLowerCase() === PIXELFLUT_BINARY_ALG_RGBA_BASE64) {
-                this._handleBinaryAlgCustom64(parts[2]);
+                this._handleBinaryAlgRgba64(parts[2]);
             } else {
                 console.error(`Cannot display pixelflut canvas because algorithm ${parts[1]} is not known.`)
             }
@@ -83,7 +83,7 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
         this.height = -1;
     };
 
-    this._handleBinaryAlgCustom64 = function (content) {
+    this._handleBinaryAlgRgba64 = function (content) {
         var arr = new Uint8ClampedArray(decode(content));
         var imageData = new ImageData(arr, this.width, this.height);
         this.canvas_ctx.putImageData(imageData, 0, 0);
@@ -97,7 +97,6 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
 /*
  * Export client in all formats known to me
  */
-export default PixelflutClient
 if (exports !== undefined) {
     exports.PixelflutClient = PixelflutClient;
 }
