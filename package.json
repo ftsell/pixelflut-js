@@ -1,5 +1,5 @@
 {
-  "name": "frontend-angular",
+  "name": "pixelflut-client",
   "version": "1.0.0",
   "description": "Library to display a pixeflut servers canvas on an HTML canvas",
   "main": "index.js",
