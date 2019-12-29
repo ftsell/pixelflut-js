@@ -7,7 +7,7 @@ export declare class PixelflutClient {
     private _socket: WebSocket;
     private _intervalId: number;
 
-    constructor(url: string, canvas: HTMLCanvasElement, autoConnect: boolean, updateFrequency: number);
+    constructor(url: string, canvas: HTMLCanvasElement, autoConnect?: boolean, updateFrequency?: number);
     public connect(): void;
     public disconnect(): void;
     public isConnected(): boolean;
