@@ -92,3 +92,12 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
     if (autoConnect)
         this.connect();
 }
+
+
+/*
+ * Export client in all formats known to me
+ */
+export default PixelflutClient
+if (exports !== undefined) {
+    exports.PixelflutClient = PixelflutClient;
+}
