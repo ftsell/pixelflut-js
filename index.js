@@ -1,7 +1,7 @@
 const PIXELFLUT_BINARY_ALG_RGBA_BASE64 = "rgba64";
 
 
-function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 5) {
+export function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 5) {
     /** @type CanvasRenderingContext2D */
     this.canvas_ctx = canvas.getContext("2d");
     /** @type string */
