@@ -84,7 +84,7 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
     };
 
     this._handleBinaryAlgRgba64 = function (content) {
-        var arr = new Uint8ClampedArray(decode(content));
+        var arr = Uint8ClampedArray.from(atob(content), c => c.charCodeAt(0));
         var imageData = new ImageData(arr, this.width, this.height);
         this.canvas_ctx.putImageData(imageData, 0, 0);
     };
@@ -97,6 +97,6 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
 /*
  * Export client in all formats known to me
  */
-if (exports !== undefined) {
+if (window.exports !== undefined) {
     exports.PixelflutClient = PixelflutClient;
 }
