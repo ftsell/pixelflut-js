@@ -1,7 +1,7 @@
 const PIXELFLUT_BINARY_ALG_RGBA_BASE64 = "rgba64";
 
 
-function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) {
+function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 5) {
     /** @type CanvasRenderingContext2D */
     this.canvas_ctx = canvas.getContext("2d");
     /** @type string */
@@ -15,6 +15,8 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
     this._socket = null;
     /** @type number */
     this._intervalId = -1;
+    /** @type ImageData */
+    this._imageData = null;
 
     /**
      * Connect to the configured pixelflut server at `this.hostname` on port `this.port`
@@ -85,8 +87,8 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 10) 
 
     this._handleBinaryAlgRgba64 = function (content) {
         var arr = Uint8ClampedArray.from(atob(content), c => c.charCodeAt(0));
-        var imageData = new ImageData(arr, this.width, this.height);
-        this.canvas_ctx.putImageData(imageData, 0, 0);
+        this._imageData = new ImageData(arr, this.width, this.height);
+        this.canvas_ctx.putImageData(this._imageData, 0, 0);
     };
 
     if (autoConnect)
