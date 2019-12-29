@@ -17,6 +17,8 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 5) {
     this._intervalId = -1;
     /** @type ImageData */
     this._imageData = null;
+    /** @type boolean */
+    this._currentlyReceiving = false;
 
     /**
      * Connect to the configured pixelflut server at `this.hostname` on port `this.port`
@@ -74,7 +76,12 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 5) {
 
     this._onConnect = function (e) {
         this._socket.send("SIZE");
-        this._intervalId = setInterval(() => this._socket.send(`STATE ${PIXELFLUT_BINARY_ALG_RGBA_BASE64}`),
+        this._intervalId = setInterval(() => {
+                if (this._currentlyReceiving === false) {
+                    this._socket.send(`STATE ${PIXELFLUT_BINARY_ALG_RGBA_BASE64}`);
+                    this._currentlyReceiving = true;
+                }
+            },
             1000 / updateFrequency);
     };
 
@@ -83,12 +90,14 @@ function PixelflutClient(url, canvas, autoConnect = true, updateFrequency = 5) {
         this._socket = null;
         this.width = -1;
         this.height = -1;
+        this._currentlyReceiving = false;
     };
 
     this._handleBinaryAlgRgba64 = function (content) {
         var arr = Uint8ClampedArray.from(atob(content), c => c.charCodeAt(0));
         this._imageData = new ImageData(arr, this.width, this.height);
         this.canvas_ctx.putImageData(this._imageData, 0, 0);
+        this._currentlyReceiving = false;
     };
 
     if (autoConnect)
