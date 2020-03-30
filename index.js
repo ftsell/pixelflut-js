@@ -63,6 +63,7 @@ export class PixelflutClient {
 
     /** @param e {MessageEvent} */
     _onClose(e) {
+        console.debug(`disconnected from ${this.url}`);
         clearInterval(this._intervalId);
         this._socket = null;
         this.width = -1;
@@ -72,6 +73,7 @@ export class PixelflutClient {
 
     /** @param e {MessageEvent} */
     _onOpen(e) {
+        console.debug(`connected to ${this.url}`);
         this._socket.send("SIZE");
         this._currentylReceiving = true;
         this._intervalId = setInterval(() => {
@@ -91,6 +93,7 @@ export class PixelflutClient {
             this.height = +parts[2];
             this.canvas_ctx.canvas.width = this.width;
             this.canvas_ctx.canvas.height = this.height;
+            console.debug(`configured canvas size to ${this.width}x${this.height}`)
         } else if (parts[0].toLowerCase() === "state") {
             if (parts[1].toLowerCase() === PIXELFLUT_BINARY_ALG_RGBA_BASE64) {
                 this._handleBinaryAlgRgba64(parts[2]);
