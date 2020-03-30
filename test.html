@@ -4,13 +4,15 @@
 	<!-- This is simple testpage not intended to be used in ithe library -->
     <meta charset="UTF-8">
     <title>Test</title>
-    <script src="index.js"></script>
-    <script>
-        setTimeout(() => client = new PixelflutClient("wss://finn-thorben.me/pixelflut", document.getElementById("cvs"), true, 5), 100);
-        //setTimeout(() => client = new PixelflutClient("ws://localhost:1235", document.getElementById("cvs")), 100);
+    <script type="module">
+        "use strict";
+        import {PixelflutClient} from "./index.js";
+
+        //const client = new PixelflutClient("wss://finn-thorben.me/pixelflut", document.getElementById("canvas"), true, 5);
+        const client = new PixelflutClient("ws://localhost:1235", document.getElementById("canvas"))
     </script>
 </head>
 <body>
-<canvas id="cvs" width="800px" height="600px"></canvas>
+<canvas id="canvas" width="800px" height="600px"></canvas>
 </body>
 </html>

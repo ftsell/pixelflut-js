@@ -14,7 +14,6 @@ export declare class PixelflutClient {
     public disconnect(): void;
     public isConnected(): boolean;
 
-    private _parseAndHandleMessage(message: string): void;
     private _onMessage(e: Event): void;
     private _onConnect(e: Event): void;
     private _onClose(e: Event): void;
