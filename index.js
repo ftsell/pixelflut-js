@@ -24,12 +24,16 @@ export class PixelflutClient {
         /** @type boolean */
         this._currentylReceiving = false;
 
+        this._connectPromiseResolution = null
+
         if (autoConnect)
-            this.connect()
+            this.connect().then(() => {})
     }
 
     /**
      * Connect to the url which was specified during object construction
+     *
+     * @returns A promise which resolves when the connection is fully established
      *
      * @throws If already connected
      */
@@ -41,6 +45,8 @@ export class PixelflutClient {
         this._socket.onmessage = (e) => this._onMessage(e);
         this._socket.onopen = (e) => this._onOpen(e);
         this._socket.onclose = (e) => this._onClose(e);
+
+        return new Promise(((resolve, reject) => this._connectPromiseResolution = {resolve, reject}))
     }
 
     /**
@@ -63,7 +69,6 @@ export class PixelflutClient {
 
     /** @param e {MessageEvent} */
     _onClose(e) {
-        console.debug(`disconnected from ${this.url}`);
         clearInterval(this._intervalId);
         this._socket = null;
         this.width = -1;
@@ -73,9 +78,19 @@ export class PixelflutClient {
 
     /** @param e {MessageEvent} */
     _onOpen(e) {
-        console.debug(`connected to ${this.url}`);
         this._socket.send("SIZE");
         this._currentylReceiving = true;
+
+        // wait until the size has been received before resolving the connection promise
+        const connectIntervalId = setInterval(() => {
+            if (this.width !== -1 && this.height !== -1) {
+                clearInterval(connectIntervalId)
+                this._connectPromiseResolution.resolve()
+            }
+        }, 1000 / this.updateFrequency)
+
+        // start the refresh loop to update canvas state
+        // it will only start sending `STATE` commands when size has been received because of `this._currentlyReceiving`
         this._intervalId = setInterval(() => {
             if (!this._currentylReceiving) {
                 this._socket.send(`STATE ${PIXELFLUT_BINARY_ALG_RGBA_BASE64}`);
@@ -93,7 +108,6 @@ export class PixelflutClient {
             this.height = +parts[2];
             this.canvas_ctx.canvas.width = this.width;
             this.canvas_ctx.canvas.height = this.height;
-            console.debug(`configured canvas size to ${this.width}x${this.height}`)
         } else if (parts[0].toLowerCase() === "state") {
             if (parts[1].toLowerCase() === PIXELFLUT_BINARY_ALG_RGBA_BASE64) {
                 this._handleBinaryAlgRgba64(parts[2]);

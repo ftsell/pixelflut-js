@@ -10,7 +10,7 @@ export declare class PixelflutClient {
     private _currentlyReceiving: boolean;
 
     constructor(url: string, canvas: HTMLCanvasElement, autoConnect?: boolean, updateFrequency?: number);
-    public connect(): void;
+    public connect(): Promise<void>;
     public disconnect(): void;
     public isConnected(): boolean;
 
